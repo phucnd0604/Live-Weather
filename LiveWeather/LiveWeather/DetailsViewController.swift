@@ -11,6 +11,10 @@ import CoreLocation
 import ImageIO
 import MapKit
 
+protocol DetailsViewControllerDelegate: NSObjectProtocol {
+    func didUpdateMenuItem()
+}
+
 class DetailsViewController: UIViewController {
     
     
@@ -21,7 +25,7 @@ class DetailsViewController: UIViewController {
     @IBOutlet weak var subTitle: UILabel!
     @IBOutlet weak var favoriteButton: UIButton!
     
-    
+    var delegate: DetailsViewControllerDelegate?
     private var isUpdatingLocation = false
     private var isUpdating = false
     private var isAnimating = false
@@ -115,7 +119,9 @@ class DetailsViewController: UIViewController {
                 self.favoriteButton.setBackgroundImage(UIImage(named: "unstar"), forState: UIControlState.Normal)
                 AppmenuItems.removeObject(acity)
                 NSUserDefaults.standardUserDefaults().setObject(AppmenuItems, forKey: kAppFavoriteCity)
-                NSNotificationCenter.defaultCenter().postNotificationName(kMenuItemDidUpdate, object: nil)
+                if let delegate = self.delegate {
+                    delegate.didUpdateMenuItem()
+                }
                 })
             alert.addAction(cancelAction)
             alert.addAction(okAction)
@@ -126,7 +132,9 @@ class DetailsViewController: UIViewController {
             AppmenuItems.append(city)
             self.favoriteButton.setBackgroundImage(UIImage(named: "star"), forState: UIControlState.Normal)
             NSUserDefaults.standardUserDefaults().setObject(AppmenuItems, forKey: kAppFavoriteCity)
-            NSNotificationCenter.defaultCenter().postNotificationName(kMenuItemDidUpdate, object: nil)
+            if let delegate = self.delegate {
+                delegate.didUpdateMenuItem()
+            }
         }
     }
     

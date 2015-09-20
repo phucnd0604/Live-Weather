@@ -39,7 +39,8 @@ class MenuViewController: UITableViewController {
             return
         }
         AppmenuItems = amenuItems
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateMenuItem", name: kMenuItemDidUpdate, object: nil)
+        let containerVC = navigationController!.parentViewController as! ContainerViewController
+        containerVC.detailViewController?.delegate = self
     }
     
     override func didReceiveMemoryWarning() {
@@ -117,6 +118,12 @@ class MenuViewController: UITableViewController {
 extension MenuViewController: UISearchResultsUpdating {
     func updateSearchResultsForSearchController(searchController: UISearchController) {
         
+    }
+}
+
+extension MenuViewController: DetailsViewControllerDelegate {
+    func didUpdateMenuItem() {
+        updateMenuItem()
     }
 }
 
